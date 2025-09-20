@@ -18,12 +18,18 @@
     <ClCompile Include="fault-tolerant-systems.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="certificate_authority.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="node.hpp">
+    <ClInclude Include="node.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="certificate_authority.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AByz.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

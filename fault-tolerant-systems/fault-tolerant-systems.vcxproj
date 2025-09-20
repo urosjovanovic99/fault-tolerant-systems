@@ -123,11 +123,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="certificate_authority.cpp" />
     <ClCompile Include="fault-tolerant-systems.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AByz.h" />
     <ClInclude Include="certificate_authority.h" />
-    <ClInclude Include="node.hpp" />
+    <ClInclude Include="node.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

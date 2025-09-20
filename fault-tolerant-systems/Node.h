@@ -12,6 +12,7 @@ private:
 	node* neighbours;
 
 public:
+	node(std::string name, bool is_faulty);
 	bool get_is_node_faulty();
 	void set_is_node_faulty(bool is_faulty);
 	std::unordered_set<unsigned char> get_messages();

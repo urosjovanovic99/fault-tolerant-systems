@@ -1,0 +1,9 @@
+﻿  certificate_authority.cpp
+C:\Users\uros.jovanovic\source\repos\fault-tolerant-systems\fault-tolerant-systems\certificate_authority.h(8,14): warning C4091: 'static ': ignored on left of 'certificate_authority' when no variable is declared
+  (compiling source file 'certificate_authority.cpp')
+  
+  fault-tolerant-systems.cpp
+  Generating Code...
+  fault-tolerant-systems.vcxproj -> C:\Users\uros.jovanovic\source\repos\fault-tolerant-systems\x64\Debug\fault-tolerant-systems.exe
+  'pwsh.exe' is not recognized as an internal or external command,
+  operable program or batch file.

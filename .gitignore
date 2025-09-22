@@ -29,5 +29,8 @@ vscode/
 idea/
 *.sln
 *.vcxproj*
-.vs
+vs/
+vscode/
+*.vc.db
+*.VC.opendb
 .vs/fault-tolerant-systems

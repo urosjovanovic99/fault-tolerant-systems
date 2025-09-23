@@ -14,7 +14,7 @@ EVP_PKEY* certificate_authority::generate_keys(std::string node_name) {
     if (pkey == NULL)
         std::cout << "EVP_PKEY_Q_keygen() failed" << std::endl;
 
-    if (certificate_authority::issued_keys.at(node_name)) {
+    if (certificate_authority::issued_keys.find(node_name) != certificate_authority::issued_keys.end()) {
         certificate_authority::issued_keys.erase(node_name);
     }
 

@@ -125,6 +125,7 @@
   <ItemGroup>
     <ClCompile Include="certificate_authority.cpp" />
     <ClCompile Include="fault-tolerant-systems.cpp" />
+    <ClCompile Include="node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AByz.h" />

@@ -18,21 +18,23 @@ private:
 	std::string name;
 	EVP_PKEY* issued_key;
 	bool is_faulty;
-	std::deque<chain_message> messages;
+	chain_message messages;
 	std::unordered_map<std::string, node*>* neighbours;
+	unsigned int faulty_nodes;
 
+private:
 	EVP_PKEY* register_node(std::string name);
 	std::vector<unsigned char> sign_message(const std::vector<unsigned char>& message);
 	bool verify_message(const std::vector<unsigned char>&, const std::vector<unsigned char>& signature, EVP_PKEY* public_key);
 
 public:
-	node(std::string name, bool is_faulty);
-	node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours);
+	node(std::string name, bool is_faulty, unsigned int faulty_nodes = 0);
+	node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours, unsigned int faulty_nodes = 0);
 	bool get_is_node_faulty();
 	void set_is_node_faulty(bool is_faulty);
-	std::deque<chain_message> get_messages();
+	chain_message get_messages();
 	EVP_PKEY* get_public_key();
-	void send_message();
+	void send_message(chain_message chain_message);
 	chain_message receive_message(chain_message message);
 	//void export_messages_to_file();
 };

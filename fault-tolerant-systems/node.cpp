@@ -1,16 +1,18 @@
 ﻿#include"node.h"
 
-node::node(std::string name, bool is_faulty) {
+node::node(std::string name, bool is_faulty, unsigned int faulty_nodes) {
 	this->name = name;
 	this->is_faulty = is_faulty;
 	this->neighbours = nullptr;
+    this->faulty_nodes = faulty_nodes;
 	this->issued_key = certificate_authority::generate_keys(name);
 }
 
-node::node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours) {
+node::node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours, unsigned int faulty_nodes) {
     this->name = name;
     this->is_faulty = is_faulty;
     this->neighbours = neighbours;
+    this->faulty_nodes = faulty_nodes;
     this->issued_key = certificate_authority::generate_keys(name);
 }
 
@@ -26,7 +28,7 @@ void node::set_is_node_faulty(bool is_faulty) {
 	this->is_faulty = is_faulty;
 }
 
-std::deque<chain_message> node::get_messages()
+chain_message node::get_messages()
 {
 	return this->messages;
 }
@@ -151,15 +153,18 @@ chain_message node::receive_message(chain_message chain_message) {
     }
 
     if (is_verified) {
-        this->messages.push_back(chain_message);
+        this->messages = chain_message;
+    }
+
+    if (is_verified && chain_message.signers.size() < this->faulty_nodes) {
+        this->send_message(chain_message);
     }
 
     return chain_message;
 }
 
-// send last received message to all other nodes that didn't signed it
-void node::send_message() {
-    chain_message chain_message = this->messages.back();
+// signe and send last received message to all other nodes that didn't signed it
+void node::send_message(chain_message chain_message) {
     std::vector<unsigned char> signature;
     if (chain_message.signers.size() == 0) {
         signature = this->sign_message(chain_message.plain_message);
@@ -171,7 +176,7 @@ void node::send_message() {
     chain_message.signers.push_back(this->name);
 
     for (auto it = this->neighbours->begin(); it != this->neighbours->end(); ++it) {
-        if (it->first != this->name && std::find(chain_message.signers.begin(), chain_message.signers.end(), it->first) != chain_message.signers.end()) {
+        if (it->first != this->name && std::find(chain_message.signers.begin(), chain_message.signers.end(), it->first) == chain_message.signers.end()) {
             it->second->receive_message(chain_message);
         }
     }

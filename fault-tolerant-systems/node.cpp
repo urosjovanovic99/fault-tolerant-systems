@@ -19,7 +19,7 @@ void node::set_is_node_faulty(bool is_faulty) {
 	this->is_faulty = is_faulty;
 }
 
-std::vector<unsigned char*> node::get_messages()
+std::vector<chain_message> node::get_messages()
 {
 	return this->messages;
 }
@@ -28,31 +28,31 @@ EVP_PKEY* node::get_public_key() {
 	return certificate_authority::get_issued_public_key(this->name);
 }
 
-std::vector<unsigned char> node::sign_message(const std::string& message) {
+std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& message) {
     std::vector<unsigned char> signature; // empty by default
 
     EVP_MD_CTX* ctx = EVP_MD_CTX_new();
     if (!ctx) {
-        std::cerr << "EVP_MD_CTX_new() failed\n";
+        std::cout << "EVP_MD_CTX_new() failed" << std::endl;
         return signature;
     }
 
     if (!this->issued_key) {
-        std::cerr << "Do not own issued key\n";
+        std::cout << "Do not own issued key\n";
         EVP_MD_CTX_free(ctx);
         return signature;
     }
 
     // Init signing with SHA-256 and private key
     if (EVP_DigestSignInit(ctx, nullptr, EVP_sha256(), nullptr, this->issued_key) != 1) {
-        std::cerr << "EVP_DigestSignInit() failed\n";
+        std::cout << "EVP_DigestSignInit() failed\n";
         EVP_MD_CTX_free(ctx);
         return signature;
     }
 
     // Feed message
     if (EVP_DigestSignUpdate(ctx, message.data(), message.size()) != 1) {
-        std::cerr << "Message hashing failed\n";
+        std::cout << "Message hashing failed\n";
         EVP_MD_CTX_free(ctx);
         return signature;
     }
@@ -60,7 +60,7 @@ std::vector<unsigned char> node::sign_message(const std::string& message) {
     // First call to get required signature length
     size_t siglen = 0;
     if (EVP_DigestSignFinal(ctx, nullptr, &siglen) != 1) {
-        std::cerr << "Getting buffer size failed\n";
+        std::cout << "Getting buffer size failed\n";
         EVP_MD_CTX_free(ctx);
         return signature;
     }
@@ -70,7 +70,7 @@ std::vector<unsigned char> node::sign_message(const std::string& message) {
 
     // Second call: actually get the signature
     if (EVP_DigestSignFinal(ctx, signature.data(), &siglen) != 1) {
-        std::cerr << "Signing message failed\n";
+        std::cout << "Signing message failed\n";
         EVP_MD_CTX_free(ctx);
         signature.clear();
         return signature;
@@ -83,25 +83,24 @@ std::vector<unsigned char> node::sign_message(const std::string& message) {
     return signature;
 }
 
-bool node::verify_message(const std::string& message,
-    const std::vector<unsigned char>& signature) {
+bool node::verify_message(const std::vector<unsigned char>& message, const std::vector<unsigned char>& signature, EVP_PKEY *public_key) {
 
     EVP_MD_CTX* ctx = EVP_MD_CTX_new();
     if (!ctx) {
-        std::cerr << "EVP_MD_CTX_new() failed\n";
+        std::cout << "EVP_MD_CTX_new() failed\n";
         return false;
     }
 
     // Init verify with SHA-256 and public key
-    if (EVP_DigestVerifyInit(ctx, nullptr, EVP_sha256(), nullptr, this->issued_key) != 1) {
-        std::cerr << "EVP_DigestVerifyInit() failed\n";
+    if (EVP_DigestVerifyInit(ctx, nullptr, EVP_sha256(), nullptr, public_key) != 1) {
+        std::cout << "EVP_DigestVerifyInit() failed\n";
         EVP_MD_CTX_free(ctx);
         return false;
     }
 
     // Feed original message
     if (EVP_DigestVerifyUpdate(ctx, message.data(), message.size()) != 1) {
-        std::cerr << "Message hashing failed\n";
+        std::cout << "Message hashing failed\n";
         EVP_MD_CTX_free(ctx);
         return false;
     }
@@ -114,11 +113,47 @@ bool node::verify_message(const std::string& message,
         return true;
     }
     else if (rc == 0) {
-        std::cerr << "Signature invalid\n";
+        std::cout << "Signature invalid\n";
         return false;
     }
     else {
-        std::cerr << "Verification error\n";
+        std::cout << "Verification error\n";
         return false;
     }
+}
+
+chain_message node::receive_message(chain_message chain_message) {
+    std::stack<std::string> signers(chain_message.signers);
+    std::deque<std::vector<unsigned char>> signatures(chain_message.signatures);
+
+    bool is_verified = true;
+
+    while (!signers.empty() && !signatures.empty()) {
+        std::string signer = signers.top();
+        std::vector<unsigned char> signature = signatures.back();
+        std::vector<unsigned char> message = signers.size() == 1 ? chain_message.plain_message : signatures.at(signatures.size() - 2);
+        auto public_key = certificate_authority::get_issued_public_key(signer);
+        bool is_signature_valid = this->verify_message(message, signature, public_key);
+        if (!is_signature_valid) {
+            is_verified = false;
+            break;
+        }
+        signers.pop();
+        signatures.pop_back();
+    }
+
+    if (is_verified) {
+        std::vector<unsigned char> signature;
+        if (chain_message.signers.size() == 0) {
+            signature = this->sign_message(chain_message.plain_message);
+        }
+        else {
+            signature = this->sign_message(chain_message.signatures.back());
+        }
+        chain_message.signatures.push_back(signature);
+        chain_message.signers.push(this->name);
+        this->messages.push_back(chain_message);
+    }
+
+    return chain_message;
 }

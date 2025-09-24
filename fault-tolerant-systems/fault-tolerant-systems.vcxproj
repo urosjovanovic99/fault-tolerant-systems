@@ -130,6 +130,7 @@
   <ItemGroup>
     <ClInclude Include="AByz.h" />
     <ClInclude Include="certificate_authority.h" />
+    <ClInclude Include="message.h" />
     <ClInclude Include="node.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

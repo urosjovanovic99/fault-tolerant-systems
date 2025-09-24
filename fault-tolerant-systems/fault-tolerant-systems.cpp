@@ -1,22 +1,31 @@
-//#include <iostream>
+#include <iostream>
 #include "node.h"
 
 int main()
 {
-    // Assume mynode has a keypair (issued_key = private key)
-    std::string msg = "Hello OpenSSL";
-    node mynode = node("A", 0);
+	std::string message = "TESTIRANJE PORUKE";
+	std::vector<unsigned char> plain_message(message.begin(), message.end());
 
-    // Sign with private key
-    auto sig = mynode.sign_message(msg);
-    // Verify with public key
-    bool ok = mynode.verify_message(msg, sig);
+	node n1("A", false);
+	node n2("B", false);
+	node n3("C", false);
+	node n4("D", false);
+	node n5("E", false);
 
-    if (ok) {
-        std::cout << "Signature verified\n";
-    }
-    else {
-        std::cout << "Signature failed\n";
-    }
+	chain_message chain_message;
+	chain_message.plain_message = plain_message;
+	
+	chain_message = n1.receive_message(chain_message);
+	chain_message = n2.receive_message(chain_message);
+	chain_message = n3.receive_message(chain_message);
+	chain_message = n4.receive_message(chain_message);
+	chain_message = n5.receive_message(chain_message);
 
+	std::cout << "SIGNERS" << std::endl;
+	while (!chain_message.signers.empty()) {
+		std::cout << chain_message.signers.top() << std::endl;
+		auto sig = chain_message.signatures.back();
+		std::cout << sig.data() << std::endl;
+		chain_message.signers.pop();
+	}
 }

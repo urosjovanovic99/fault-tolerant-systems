@@ -1,4 +1,9 @@
+# Prerequisites
+*.d
+
 # Compiled Object files
+*.slo
+*.lo
 *.o
 *.obj
 
@@ -6,12 +11,24 @@
 *.gch
 *.pch
 
+# Linker files
+*.ilk
+
+# Debugger Files
+*.pdb
+
 # Compiled Dynamic libraries
 *.so
 *.dylib
 *.dll
 
+# Fortran module files
+*.mod
+*.smod
+
 # Compiled Static libraries
+*.lai
+*.la
 *.a
 *.lib
 
@@ -20,18 +37,10 @@
 *.out
 *.app
 
-# Debugger Files
-*.pdb
-*.ilk
+# debug information files
+*.dwo
 
-# IDE-specific files (e.g., Visual Studio, CLion)
-vscode/
-idea/
-*.sln
-*.vcxproj*
-vs/
-vscode/
-*.vc.db
-*.VC.opendb
-.vs/fault-tolerant-systems
+.vs/
+fault-tolerant-systems/x64/
 fault-tolerant-systems/x64/Debug/
+fault-tolerant-systems/x64/v17/

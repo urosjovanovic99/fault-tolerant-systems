@@ -3,16 +3,31 @@
   "WorkspaceRootPath": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\certificate_authority.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|solutionrelative:fault-tolerant-systems\\certificate_authority.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\node.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|solutionrelative:fault-tolerant-systems\\node.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\node.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|solutionrelative:fault-tolerant-systems\\node.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\fault-tolerant-systems.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|solutionrelative:fault-tolerant-systems\\fault-tolerant-systems.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\Node.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|solutionrelative:fault-tolerant-systems\\Node.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\message.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|solutionrelative:fault-tolerant-systems\\message.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\certificate_authority.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|solutionrelative:fault-tolerant-systems\\certificate_authority.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\certificate_authority.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{BE2D2244-4A45-4F32-ABCB-330F805AA126}|fault-tolerant-systems\\fault-tolerant-systems.vcxproj|solutionrelative:fault-tolerant-systems\\certificate_authority.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include\\unordered_map||{3B902123-F8A7-4915-9F01-361F908088D0}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,46 +37,97 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
+              "Title": "message.h",
+              "DocumentMoniker": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\message.h",
+              "RelativeDocumentMoniker": "fault-tolerant-systems\\message.h",
+              "ToolTip": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\message.h",
+              "RelativeToolTip": "fault-tolerant-systems\\message.h",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-09-23T18:47:01.209Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "certificate_authority.h",
               "DocumentMoniker": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\certificate_authority.h",
               "RelativeDocumentMoniker": "fault-tolerant-systems\\certificate_authority.h",
               "ToolTip": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\certificate_authority.h",
               "RelativeToolTip": "fault-tolerant-systems\\certificate_authority.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAACAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-09-18T19:27:42.326Z",
+              "WhenOpened": "2025-09-22T19:57:56.258Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "node.hpp",
-              "DocumentMoniker": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\node.hpp",
-              "RelativeDocumentMoniker": "fault-tolerant-systems\\node.hpp",
-              "ToolTip": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\node.hpp",
-              "RelativeToolTip": "fault-tolerant-systems\\node.hpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAMAAAADAAAAAAAAAA==",
+              "DocumentIndex": 4,
+              "Title": "certificate_authority.cpp",
+              "DocumentMoniker": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\certificate_authority.cpp",
+              "RelativeDocumentMoniker": "fault-tolerant-systems\\certificate_authority.cpp",
+              "ToolTip": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\certificate_authority.cpp",
+              "RelativeToolTip": "fault-tolerant-systems\\certificate_authority.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-09-22T19:57:51.796Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "node.cpp",
+              "DocumentMoniker": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\node.cpp",
+              "RelativeDocumentMoniker": "fault-tolerant-systems\\node.cpp",
+              "ToolTip": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\node.cpp",
+              "RelativeToolTip": "fault-tolerant-systems\\node.cpp",
+              "ViewState": "AgIAAD8AAAAAAAAAAAAAALEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-09-22T19:24:26.998Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "node.h",
+              "DocumentMoniker": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\node.h",
+              "RelativeDocumentMoniker": "fault-tolerant-systems\\node.h",
+              "ToolTip": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\node.h",
+              "RelativeToolTip": "fault-tolerant-systems\\node.h",
+              "ViewState": "AgIAABEAAAAAAAAAAAAYwCIAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-09-18T19:01:09.481Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "fault-tolerant-systems.cpp",
               "DocumentMoniker": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\fault-tolerant-systems.cpp",
               "RelativeDocumentMoniker": "fault-tolerant-systems\\fault-tolerant-systems.cpp",
               "ToolTip": "C:\\Users\\uros.jovanovic\\source\\repos\\fault-tolerant-systems\\fault-tolerant-systems\\fault-tolerant-systems.cpp",
               "RelativeToolTip": "fault-tolerant-systems\\fault-tolerant-systems.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAiAAAAAAAAAA==",
+              "ViewState": "AgIAAAEAAAAAAAAAAAAtwBwAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-09-18T18:43:01.995Z",
               "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "unordered_map",
+              "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include\\unordered_map",
+              "RelativeDocumentMoniker": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include\\unordered_map",
+              "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include\\unordered_map",
+              "RelativeToolTip": "..\\..\\..\\..\\..\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Tools\\MSVC\\14.44.35207\\include\\unordered_map",
+              "ViewState": "AgIAAKYBAAAAAAAAAAAjwLkBAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001001|",
+              "WhenOpened": "2025-09-22T21:51:49.282Z"
             }
           ]
         }

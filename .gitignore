@@ -34,15 +34,4 @@ vscode/
 *.vc.db
 *.VC.opendb
 .vs/fault-tolerant-systems
-.vs/fault-tolerant-systems/FileContentIndex/23155d2e-69cc-42b1-ba0b-e20740276849.vsidx
-.vs/fault-tolerant-systems/v17/.suo
-.vs/fault-tolerant-systems/v17/Browse.VC.db
-.vs/fault-tolerant-systems/v17/DocumentLayout.backup.json
-.vs/fault-tolerant-systems/v17/DocumentLayout.json
-.vs/fault-tolerant-systems/v17/ipch/AutoPCH/129f743582140b8f/FAULT-TOLERANT-SYSTEMS.ipch
-fault-tolerant-systems/x64/Debug/fault-to.be2d2244.tlog/CL.read.1.tlog
-fault-tolerant-systems/x64/Debug/fault-to.be2d2244.tlog/CL.write.1.tlog
-fault-tolerant-systems/x64/Debug/fault-to.be2d2244.tlog/fault-tolerant-systems.write.1u.tlog
-fault-tolerant-systems/x64/Debug/fault-to.be2d2244.tlog/link.read.1.tlog
-fault-tolerant-systems/x64/Debug/fault-tolerant-systems.log
-fault-tolerant-systems/x64/Debug/vc143.idb
+fault-tolerant-systems/x64/Debug/

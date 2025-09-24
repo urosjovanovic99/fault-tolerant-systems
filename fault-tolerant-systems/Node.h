@@ -3,7 +3,8 @@
 #include"message.h"
 #include <iostream>
 #include <unordered_set>
-#include<stack>
+#include <deque>
+#include <algorithm>
 #include <openssl/pem.h>
 #include <openssl/core_names.h>
 #include <openssl/evp.h>
@@ -17,8 +18,8 @@ private:
 	std::string name;
 	EVP_PKEY* issued_key;
 	bool is_faulty;
-	std::vector<chain_message> messages;
-	node* neighbours;
+	std::deque<chain_message> messages;
+	std::unordered_map<std::string, node*>* neighbours;
 
 	EVP_PKEY* register_node(std::string name);
 	std::vector<unsigned char> sign_message(const std::vector<unsigned char>& message);
@@ -26,11 +27,12 @@ private:
 
 public:
 	node(std::string name, bool is_faulty);
+	node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours);
 	bool get_is_node_faulty();
 	void set_is_node_faulty(bool is_faulty);
-	std::vector<chain_message> get_messages();
+	std::deque<chain_message> get_messages();
 	EVP_PKEY* get_public_key();
-	void send_message(std::string name);
+	void send_message();
 	chain_message receive_message(chain_message message);
 	//void export_messages_to_file();
 };

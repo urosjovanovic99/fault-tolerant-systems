@@ -23,9 +23,9 @@ int main()
 
 	std::cout << "SIGNERS" << std::endl;
 	while (!chain_message.signers.empty()) {
-		std::cout << chain_message.signers.top() << std::endl;
+		std::cout << chain_message.signers.back() << std::endl;
 		auto sig = chain_message.signatures.back();
 		std::cout << sig.data() << std::endl;
-		chain_message.signers.pop();
+		chain_message.signers.pop_back();
 	}
 }

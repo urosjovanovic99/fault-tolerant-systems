@@ -18,7 +18,7 @@ private:
 	std::string name;
 	EVP_PKEY* issued_key;
 	bool is_faulty;
-	chain_message messages;
+	std::vector<chain_message> messages;
 	std::unordered_map<std::string, node*>* neighbours;
 	unsigned int faulty_nodes;
 
@@ -32,9 +32,9 @@ public:
 	node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours, unsigned int faulty_nodes = 0);
 	bool get_is_node_faulty();
 	void set_is_node_faulty(bool is_faulty);
-	chain_message get_messages();
+	std::vector<chain_message> get_messages();
 	EVP_PKEY* get_public_key();
-	void send_message(chain_message chain_message);
-	chain_message receive_message(chain_message message);
+	void send_messages();
+	void receive_message(chain_message message);
 	//void export_messages_to_file();
 };

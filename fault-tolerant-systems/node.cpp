@@ -28,7 +28,7 @@ void node::set_is_node_faulty(bool is_faulty) {
 	this->is_faulty = is_faulty;
 }
 
-chain_message node::get_messages()
+std::vector<chain_message> node::get_messages()
 {
 	return this->messages;
 }
@@ -131,8 +131,12 @@ bool node::verify_message(const std::vector<unsigned char>& message, const std::
     }
 }
 
-// receive message and check chain signatures, if it is valid store in map
-chain_message node::receive_message(chain_message chain_message) {
+// verify all signatures in message and if verification is success, store it locally with other messages
+// if already signed by this node discard it
+void node::receive_message(chain_message chain_message) {
+    if (std::find(chain_message.signers.begin(), chain_message.signers.end(), this->name) != chain_message.signers.end()) {
+        return; // already signed it
+    }
     std::deque<std::string> signers(chain_message.signers);
     std::deque<std::vector<unsigned char>> signatures(chain_message.signatures);
 
@@ -153,31 +157,26 @@ chain_message node::receive_message(chain_message chain_message) {
     }
 
     if (is_verified) {
-        this->messages = chain_message;
+        this->messages.push_back(chain_message);
     }
-
-    if (is_verified && chain_message.signers.size() < this->faulty_nodes) {
-        this->send_message(chain_message);
-    }
-
-    return chain_message;
 }
 
-// signe and send last received message to all other nodes that didn't signed it
-void node::send_message(chain_message chain_message) {
-    std::vector<unsigned char> signature;
-    if (chain_message.signers.size() == 0) {
-        signature = this->sign_message(chain_message.plain_message);
-    }
-    else {
-        signature = this->sign_message(chain_message.signatures.back());
-    }
-    chain_message.signatures.push_back(signature);
-    chain_message.signers.push_back(this->name);
+// go through all received messages and if message is not signed by this node, sign it and forward it to other nodes
+void node::send_messages() {
+    for (auto it = this->messages.begin(); it != this->messages.end(); ++it) {
+        if (std::find(it->signers.begin(), it->signers.end(), this->name) == it->signers.end() || it->signers.size() == 0) {
+            // if this is first signature sign plain message, otherwise sign other signatures
+            std::vector<unsigned char> signed_message = this->sign_message(it->signatures.size() == 0 ? it->plain_message : it->signatures.back());
+            
+            chain_message forwarding_message = *it;
+            forwarding_message.signers.push_back(this->name);
+            forwarding_message.signatures.push_back(signed_message);
 
-    for (auto it = this->neighbours->begin(); it != this->neighbours->end(); ++it) {
-        if (it->first != this->name && std::find(chain_message.signers.begin(), chain_message.signers.end(), it->first) == chain_message.signers.end()) {
-            it->second->receive_message(chain_message);
+            for (auto node = this->neighbours->begin(); node != this->neighbours->end(); ++node) {
+                if (std::find(forwarding_message.signers.begin(), forwarding_message.signers.end(), node->first) == forwarding_message.signers.end()) {
+                    node->second->receive_message(forwarding_message);
+                }
+            }
         }
     }
 }

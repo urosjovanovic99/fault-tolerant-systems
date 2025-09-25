@@ -3,8 +3,6 @@
 #include"message.h"
 int main()
 {
-	std::string message = "TESTIRANJE PORUKE";
-	std::vector<unsigned char> plain_message(message.begin(), message.end());
 	std::unordered_map<std::string, node*>* neighbours = new std::unordered_map<std::string, node*>();
 
 	node n1("A", false, neighbours, 0);
@@ -19,21 +17,25 @@ int main()
 	neighbours->insert({ "E", &n5 });
 
 
-	chain_message cm;
-	cm.plain_message = plain_message;
+	chain_message cm("TESTIRANJE PORUKE");
 	
-	cm = n1.receive_message(cm);
+	n1.receive_message(cm);
 
-	std::cout << "SIGNERS" << std::endl;
-	while (!cm.signers.empty()) {
-		std::cout << cm.signers.back() << std::endl;
+	for (int round = 0; round < 5; round++) {
+		for (auto node = neighbours->begin(); node != neighbours->end(); ++node) {
+			node->second->send_messages();
+		}
 	}
+	//std::cout << "SIGNERS" << std::endl;
+	//while (!cm.signers.empty()) {
+	//	std::cout << cm.signers.back() << std::endl;
+	//}
 
-	chain_message n1_received_messages = n1.get_messages();
-	chain_message n2_received_messages = n2.get_messages();
-	chain_message n3_received_messages = n3.get_messages();
-	chain_message n4_received_messages = n4.get_messages();
-	chain_message n5_received_messages = n5.get_messages();
+	std::vector<chain_message> n1_received_messages = n1.get_messages();
+	std::vector<chain_message> n2_received_messages = n2.get_messages();
+	std::vector<chain_message> n3_received_messages = n3.get_messages();
+	std::vector<chain_message> n4_received_messages = n4.get_messages();
+	std::vector<chain_message> n5_received_messages = n5.get_messages();
 
 
 }

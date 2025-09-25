@@ -1,6 +1,6 @@
 ﻿#include"node.h"
 
-node::node(std::string name, bool is_faulty, unsigned int faulty_nodes) {
+node::node(std::string name, bool is_faulty, int faulty_nodes) {
 	this->name = name;
 	this->is_faulty = is_faulty;
 	this->neighbours = nullptr;
@@ -8,7 +8,7 @@ node::node(std::string name, bool is_faulty, unsigned int faulty_nodes) {
 	this->issued_key = certificate_authority::generate_keys(name);
 }
 
-node::node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours, unsigned int faulty_nodes) {
+node::node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours, int faulty_nodes) {
     this->name = name;
     this->is_faulty = is_faulty;
     this->neighbours = neighbours;
@@ -137,6 +137,9 @@ void node::receive_message(chain_message chain_message) {
     if (std::find(chain_message.signers.begin(), chain_message.signers.end(), this->name) != chain_message.signers.end()) {
         return; // already signed it
     }
+    //if (chain_message.signers.size() > this->faulty_nodes) {
+    //    return; // discard message if number of signatures are greater than traitors
+    //}
     std::deque<std::string> signers(chain_message.signers);
     std::deque<std::vector<unsigned char>> signatures(chain_message.signatures);
 
@@ -164,7 +167,8 @@ void node::receive_message(chain_message chain_message) {
 // go through all received messages and if message is not signed by this node, sign it and forward it to other nodes
 void node::send_messages() {
     for (auto it = this->messages.begin(); it != this->messages.end(); ++it) {
-        if (std::find(it->signers.begin(), it->signers.end(), this->name) == it->signers.end() || it->signers.size() == 0) {
+        if (it->signers.size() < (this->faulty_nodes + 1) &&
+            (std::find(it->signers.begin(), it->signers.end(), this->name) == it->signers.end() || it->signers.size() == 0)) {
             // if this is first signature sign plain message, otherwise sign other signatures
             std::vector<unsigned char> signed_message = this->sign_message(it->signatures.size() == 0 ? it->plain_message : it->signatures.back());
             

@@ -5,11 +5,12 @@ int main()
 {
 	std::unordered_map<std::string, node*>* neighbours = new std::unordered_map<std::string, node*>();
 
-	node n1("A", false, neighbours, 0);
-	node n2("B", false, neighbours, 0);
-	node n3("C", false, neighbours, 0);
-	node n4("D", false, neighbours, 0);
-	node n5("E", false, neighbours, 0);
+	node n1("A", false, neighbours, 2);
+	node n2("B", false, neighbours, 2);
+	node n3("C", false, neighbours, 2);
+	node n4("D", false, neighbours, 2);
+	node n5("E", false, neighbours, 2);
+
 	neighbours->insert({ "A", &n1 });
 	neighbours->insert({ "B", &n2 });
 	neighbours->insert({ "C", &n3 });
@@ -20,16 +21,15 @@ int main()
 	chain_message cm("TESTIRANJE PORUKE");
 	
 	n1.receive_message(cm);
+	n1.send_messages();
 
-	for (int round = 0; round < 5; round++) {
+	for (int round = 0; round < 2; round++) {
 		for (auto node = neighbours->begin(); node != neighbours->end(); ++node) {
-			node->second->send_messages();
+			if (node->second != &n1) {
+				node->second->send_messages();
+			}
 		}
 	}
-	//std::cout << "SIGNERS" << std::endl;
-	//while (!cm.signers.empty()) {
-	//	std::cout << cm.signers.back() << std::endl;
-	//}
 
 	std::vector<chain_message> n1_received_messages = n1.get_messages();
 	std::vector<chain_message> n2_received_messages = n2.get_messages();

@@ -20,7 +20,7 @@ private:
 	bool is_faulty;
 	std::vector<chain_message> messages;
 	std::unordered_map<std::string, node*>* neighbours;
-	unsigned int faulty_nodes;
+	int faulty_nodes;
 
 private:
 	EVP_PKEY* register_node(std::string name);
@@ -28,8 +28,8 @@ private:
 	bool verify_message(const std::vector<unsigned char>&, const std::vector<unsigned char>& signature, EVP_PKEY* public_key);
 
 public:
-	node(std::string name, bool is_faulty, unsigned int faulty_nodes = 0);
-	node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours, unsigned int faulty_nodes = 0);
+	node(std::string name, bool is_faulty, int faulty_nodes = 0);
+	node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours, int faulty_nodes = 0);
 	bool get_is_node_faulty();
 	void set_is_node_faulty(bool is_faulty);
 	std::vector<chain_message> get_messages();

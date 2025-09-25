@@ -123,6 +123,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AByz.cpp" />
     <ClCompile Include="certificate_authority.cpp" />
     <ClCompile Include="fault-tolerant-systems.cpp" />
     <ClCompile Include="node.cpp" />

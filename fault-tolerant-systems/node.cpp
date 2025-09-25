@@ -133,22 +133,20 @@ bool node::verify_message(const std::vector<unsigned char>& message, const std::
 
 // verify all signatures in message and if verification is success, store it locally with other messages
 // if already signed by this node discard it
-void node::receive_message(chain_message chain_message) {
-    if (std::find(chain_message.signers.begin(), chain_message.signers.end(), this->name) != chain_message.signers.end()) {
+void node::receive_message(chain_message received_message) {
+    if (std::find(received_message.signers.begin(), received_message.signers.end(), this->name) != received_message.signers.end()) {
         return; // already signed it
     }
-    //if (chain_message.signers.size() > this->faulty_nodes) {
-    //    return; // discard message if number of signatures are greater than traitors
-    //}
-    std::deque<std::string> signers(chain_message.signers);
-    std::deque<std::vector<unsigned char>> signatures(chain_message.signatures);
+
+    std::deque<std::string> signers(received_message.signers);
+    std::deque<std::vector<unsigned char>> signatures(received_message.signatures);
 
     bool is_verified = true;
 
     while (!signers.empty() && !signatures.empty()) {
         std::string signer = signers.back();
         std::vector<unsigned char> signature = signatures.back();
-        std::vector<unsigned char> message = signers.size() == 1 ? chain_message.plain_message : signatures.at(signatures.size() - 2);
+        std::vector<unsigned char> message = signers.size() == 1 ? received_message.plain_message : signatures.at(signatures.size() - 2);
         auto public_key = certificate_authority::get_issued_public_key(signer);
         bool is_signature_valid = this->verify_message(message, signature, public_key);
         if (!is_signature_valid) {
@@ -160,7 +158,7 @@ void node::receive_message(chain_message chain_message) {
     }
 
     if (is_verified) {
-        this->messages.push_back(chain_message);
+        this->messages.push_back(received_message);
     }
 }
 
@@ -171,10 +169,15 @@ void node::send_messages() {
             (std::find(it->signers.begin(), it->signers.end(), this->name) == it->signers.end() || it->signers.size() == 0)) {
             // if this is first signature sign plain message, otherwise sign other signatures
             std::vector<unsigned char> signed_message = this->sign_message(it->signatures.size() == 0 ? it->plain_message : it->signatures.back());
-            
+
+            // create message for forwarding
             chain_message forwarding_message = *it;
             forwarding_message.signers.push_back(this->name);
             forwarding_message.signatures.push_back(signed_message);
+
+            // add signature on old message as well
+            it->signers.push_back(this->name);
+            it->signatures.push_back(signed_message);
 
             for (auto node = this->neighbours->begin(); node != this->neighbours->end(); ++node) {
                 if (std::find(forwarding_message.signers.begin(), forwarding_message.signers.end(), node->first) == forwarding_message.signers.end()) {

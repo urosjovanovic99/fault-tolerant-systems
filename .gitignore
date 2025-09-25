@@ -42,3 +42,9 @@
 
 .vs/
 fault-tolerant-systems/x64/
+
+# IDE-specific files (e.g., Visual Studio, CLion)
+vscode/
+idea/
+*.sln
+*.vcxproj*

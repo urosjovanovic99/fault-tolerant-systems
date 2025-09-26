@@ -26,7 +26,7 @@ std::string AByz::generate_random_message() {
 void AByz::create_graph() {
 	this->nodes = new std::unordered_map<std::string, node*>(this->N);
 	
-	unsigned int number_of_faulty = 0;
+	int number_of_faulty = 0;
 	for (int i = 0; i < N; i++) {
 		bool is_faulty = number_of_faulty++ < this->m;
 		std::string name(1, static_cast<char>(('A' + i)));

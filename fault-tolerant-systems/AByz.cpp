@@ -55,6 +55,6 @@ void AByz::run_algorithm() {
 	}
 
 	for (auto node = nodes->begin(); node != nodes->end(); ++node) {
-		std::vector<chain_message> messages = node->second->get_messages();
+		node->second->export_node_to_file();
 	}
 }

@@ -1,4 +1,5 @@
 ﻿#include"node.h"
+#include <nlohmann/json.hpp>
 
 node::node(std::string name, bool is_faulty, int faulty_nodes) {
 	this->name = name;
@@ -6,6 +7,7 @@ node::node(std::string name, bool is_faulty, int faulty_nodes) {
 	this->neighbours = nullptr;
     this->faulty_nodes = faulty_nodes;
 	this->issued_key = certificate_authority::generate_keys(name);
+    this->file = std::ofstream(this->name + "_NODE.json");
 }
 
 node::node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours, int faulty_nodes) {
@@ -14,6 +16,7 @@ node::node(std::string name, bool is_faulty, std::unordered_map<std::string, nod
     this->neighbours = neighbours;
     this->faulty_nodes = faulty_nodes;
     this->issued_key = certificate_authority::generate_keys(name);
+    this->file = std::ofstream(this->name + "_NODE.json");
 }
 
 EVP_PKEY* node::register_node(std::string name) {
@@ -196,5 +199,19 @@ void node::send_messages() {
                 }
             }
         }
+    }
+}
+
+void node::export_node_to_file() {
+    nlohmann::json node;
+    node["name"] = this->name;
+    node["is_faulty"] = this->is_faulty;
+    std::vector<std::string> messages;
+    for (auto it = this->messages.begin(); it != this->messages.end(); ++it) {
+        messages.push_back(it->to_string());
+    }
+    node["messages"] = messages;
+    if (this->file.is_open()) {
+        this->file << node.dump(4);
     }
 }

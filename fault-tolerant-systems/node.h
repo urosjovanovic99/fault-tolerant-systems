@@ -5,6 +5,8 @@
 #include <unordered_set>
 #include <deque>
 #include <algorithm>
+#include <fstream>
+
 #include <openssl/pem.h>
 #include <openssl/core_names.h>
 #include <openssl/evp.h>
@@ -22,6 +24,7 @@ private:
 	std::vector<chain_message> messages;
 	std::unordered_map<std::string, node*>* neighbours;
 	int faulty_nodes;
+	std::ofstream file;
 
 private:
 	EVP_PKEY* register_node(std::string name);
@@ -37,5 +40,5 @@ public:
 	EVP_PKEY* get_public_key();
 	void send_messages();
 	void receive_message(chain_message message);
-	//void export_messages_to_file();
+	void export_node_to_file();
 };

@@ -12,6 +12,7 @@
 #include <openssl/params.h>
 #include <openssl/err.h>
 #include <openssl/bio.h>
+#include <spdlog/spdlog.h>
 
 class node {
 private:

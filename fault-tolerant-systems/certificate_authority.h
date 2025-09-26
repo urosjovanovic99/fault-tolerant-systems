@@ -4,6 +4,7 @@
 #include <openssl/rsa.h>
 #include <openssl/evp.h>
 #include <openssl/pem.h>
+#include <spdlog/spdlog.h>
 
 class certificate_authority {
 private:

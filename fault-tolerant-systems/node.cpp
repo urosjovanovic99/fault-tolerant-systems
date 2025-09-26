@@ -38,30 +38,34 @@ EVP_PKEY* node::get_public_key() {
 }
 
 std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& message) {
-    std::vector<unsigned char> signature; // empty by default
+    spdlog::info("{} node signing message", this->name);
+    std::vector<unsigned char> signature;
 
     EVP_MD_CTX* ctx = EVP_MD_CTX_new();
     if (!ctx) {
-        std::cout << "EVP_MD_CTX_new() failed" << std::endl;
+        spdlog::error("EVP_MD_CTX_new() failed while creating context");
         return signature;
     }
 
     if (!this->issued_key) {
-        std::cout << "Do not own issued key\n";
+        spdlog::error("Node {} do not has issued key", this->name);
+        spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return signature;
     }
 
     // Init signing with SHA-256 and private key
     if (EVP_DigestSignInit(ctx, nullptr, EVP_sha256(), nullptr, this->issued_key) != 1) {
-        std::cout << "EVP_DigestSignInit() failed\n";
+        spdlog::error("EVP_DigestSignInit() failed");
+        spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return signature;
     }
 
     // Feed message
     if (EVP_DigestSignUpdate(ctx, message.data(), message.size()) != 1) {
-        std::cout << "Message hashing failed\n";
+        spdlog::error("Message hashing failed");
+        spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return signature;
     }
@@ -69,7 +73,8 @@ std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& 
     // First call to get required signature length
     size_t siglen = 0;
     if (EVP_DigestSignFinal(ctx, nullptr, &siglen) != 1) {
-        std::cout << "Getting buffer size failed\n";
+        spdlog::error("Getting buffer size failed");
+        spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return signature;
     }
@@ -79,7 +84,8 @@ std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& 
 
     // Second call: actually get the signature
     if (EVP_DigestSignFinal(ctx, signature.data(), &siglen) != 1) {
-        std::cout << "Signing message failed\n";
+        spdlog::critical("Signing message failed");
+        spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         signature.clear();
         return signature;
@@ -89,6 +95,8 @@ std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& 
     signature.resize(siglen);
 
     EVP_MD_CTX_free(ctx);
+
+    spdlog::info("Node {} successfully signed message", this->name);
     return signature;
 }
 
@@ -96,20 +104,22 @@ bool node::verify_message(const std::vector<unsigned char>& message, const std::
 
     EVP_MD_CTX* ctx = EVP_MD_CTX_new();
     if (!ctx) {
-        std::cout << "EVP_MD_CTX_new() failed\n";
+        spdlog::error("EVP_MD_CTX_new() failed while creating context for message verify");
         return false;
     }
 
     // Init verify with SHA-256 and public key
     if (EVP_DigestVerifyInit(ctx, nullptr, EVP_sha256(), nullptr, public_key) != 1) {
-        std::cout << "EVP_DigestVerifyInit() failed\n";
+        spdlog::error("EVP_DigestVerifyInit() failed while creating context for message verify");
+        spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return false;
     }
 
     // Feed original message
     if (EVP_DigestVerifyUpdate(ctx, message.data(), message.size()) != 1) {
-        std::cout << "Message hashing failed\n";
+        spdlog::critical("Message hashing failed");
+        spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return false;
     }
@@ -119,14 +129,15 @@ bool node::verify_message(const std::vector<unsigned char>& message, const std::
     EVP_MD_CTX_free(ctx);
 
     if (rc == 1) {
+        spdlog::debug("Message verification successfull");
         return true;
     }
     else if (rc == 0) {
-        std::cout << "Signature invalid\n";
+        spdlog::debug("Signature invalidl");
         return false;
     }
     else {
-        std::cout << "Verification error\n";
+        spdlog::error("Verification error");
         return false;
     }
 }

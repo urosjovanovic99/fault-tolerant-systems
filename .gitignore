@@ -48,3 +48,6 @@ vscode/
 idea/
 *.sln
 *.vcxproj*
+
+# logging
+logs/

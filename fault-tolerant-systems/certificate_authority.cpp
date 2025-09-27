@@ -1,7 +1,7 @@
 #include"certificate_authority.h"
 
 std::unordered_map<std::string, EVP_PKEY*> certificate_authority::issued_keys;
-const char* certificate_authority::propq = NULL;
+const char* certificate_authority::propq = nullptr;
 const unsigned int certificate_authority::bits = 4096;
 OSSL_LIB_CTX* certificate_authority::libctx = nullptr;
 

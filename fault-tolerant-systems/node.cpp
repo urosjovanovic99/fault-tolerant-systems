@@ -1,13 +1,31 @@
 ﻿#include"node.h"
 #include <nlohmann/json.hpp>
 
+const std::string node::log_directory = "logs";
+const std::chrono::system_clock::time_point node::now = std::chrono::system_clock::now();
+
+std::string node::get_current_timestamp() {
+    std::time_t t = std::chrono::system_clock::to_time_t(now);
+
+    std::tm tm;
+#ifdef _WIN32
+    gmtime_s(&tm, &t);
+#else
+    gmtime_r(&t, &tm);
+#endif
+    // Use '-' for separators in the time portion so the string is valid on Windows
+    std::ostringstream oss;
+    oss << std::put_time(&tm, "%Y-%m-%dT%H-%M-%SZ"); // note: %H-%M-%S (hyphens) instead of %H:%M:%S
+    return oss.str();
+}
+
 node::node(std::string name, bool is_faulty, int faulty_nodes) {
 	this->name = name;
 	this->is_faulty = is_faulty;
 	this->neighbours = nullptr;
     this->faulty_nodes = faulty_nodes;
 	this->issued_key = certificate_authority::generate_keys(name);
-    this->file = std::ofstream(this->name + "_NODE.json");
+    this->file = this->create_logging();
 }
 
 node::node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours, int faulty_nodes) {
@@ -16,7 +34,16 @@ node::node(std::string name, bool is_faulty, std::unordered_map<std::string, nod
     this->neighbours = neighbours;
     this->faulty_nodes = faulty_nodes;
     this->issued_key = certificate_authority::generate_keys(name);
-    this->file = std::ofstream(this->name + "_NODE.json");
+    this->file = this->create_logging();
+}
+
+std::ofstream node::create_logging() {
+    std::string timestamp = node::get_current_timestamp();
+    std::filesystem::path path = std::filesystem::path(log_directory) / timestamp / this->name / (this->name + "_NODE.json");
+    if (!std::filesystem::exists(path)) {
+        std::filesystem::create_directories(path.parent_path());
+    }
+    return std::ofstream(path);
 }
 
 EVP_PKEY* node::register_node(std::string name) {

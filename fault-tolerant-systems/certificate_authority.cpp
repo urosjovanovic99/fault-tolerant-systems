@@ -56,3 +56,59 @@ EVP_PKEY* certificate_authority::get_issued_public_key(std::string node_name) {
     spdlog::debug("Retrieve public key for node {} successfully", node_name);
     return pubkey; // caller must EVP_PKEY_free(pubkey)
 }
+
+bool certificate_authority::export_issed_keys(std::string node_name, std::filesystem::path key_path) {
+    EVP_PKEY* pkey = certificate_authority::issued_keys.at(node_name);
+    if (!pkey) {
+        spdlog::error("There is no issued keys for node {}", node_name);
+        return false;
+    }
+    std::error_code ec;
+    if (!std::filesystem::exists(key_path)) {
+        std::filesystem::create_directories(key_path, ec);
+        if (ec) {
+            spdlog::error("Error while creating logging directory, {}", ec.message());
+            return false;
+        }
+    }
+
+    std::filesystem::path public_key_path = key_path / "public_key.pem";
+    std::filesystem::path private_key_path = key_path / "private_key.pem";
+
+    return certificate_authority::save_private_key(pkey, private_key_path.string()) &&
+        certificate_authority::save_public_key(pkey, public_key_path.string());
+}
+
+bool certificate_authority::save_private_key(EVP_PKEY* pkey, const std::string& filename) {
+    BIO* bio = BIO_new_file(filename.c_str(), "w");
+    if (!bio) {
+        spdlog::error("Failed to open file for writing private key");
+        return false;
+    }
+
+    if (!PEM_write_bio_PrivateKey(bio, pkey, nullptr, nullptr, 0, nullptr, nullptr)) {
+        spdlog::error("PEM_write_PrivateKey failed");
+        BIO_free(bio);
+        return false;
+    }
+
+    BIO_free(bio);
+    return true;
+}
+
+bool certificate_authority::save_public_key(EVP_PKEY* pkey, const std::string& filename) {
+    BIO* bio = BIO_new_file(filename.c_str(), "w");
+    if (!bio) {
+        spdlog::error("Failed to open file for writing public key");
+        return false;
+    }
+
+    if (!PEM_write_bio_PUBKEY(bio, pkey)) {
+        spdlog::error("PEM_write_PUBKEY failed");
+        BIO_free(bio);
+        return false;
+    }
+
+    BIO_free(bio);
+    return true;
+}

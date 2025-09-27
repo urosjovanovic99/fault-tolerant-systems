@@ -28,7 +28,7 @@ private:
 	std::vector<chain_message> messages;
 	std::unordered_map<std::string, node*>* neighbours;
 	int faulty_nodes;
-	std::ofstream file;
+	std::ofstream* file;
 
 	static const std::string log_directory;
 	static const std::chrono::system_clock::time_point now;
@@ -37,7 +37,7 @@ private:
 	EVP_PKEY* register_node(std::string name);
 	std::vector<unsigned char> sign_message(const std::vector<unsigned char>& message);
 	bool verify_message(const std::vector<unsigned char>&, const std::vector<unsigned char>& signature, EVP_PKEY* public_key);
-	std::ofstream create_logging();
+	std::ofstream* create_logging();
 
 public:
 	node(std::string name, bool is_faulty, int faulty_nodes = 0);

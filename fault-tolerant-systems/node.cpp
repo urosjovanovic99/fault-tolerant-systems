@@ -37,13 +37,18 @@ node::node(std::string name, bool is_faulty, std::unordered_map<std::string, nod
     this->file = this->create_logging();
 }
 
-std::ofstream node::create_logging() {
+std::ofstream* node::create_logging() {
     std::string timestamp = node::get_current_timestamp();
     std::filesystem::path path = std::filesystem::path(log_directory) / timestamp / this->name / (this->name + "_NODE.json");
+    std::error_code ec;
     if (!std::filesystem::exists(path)) {
-        std::filesystem::create_directories(path.parent_path());
+        std::filesystem::create_directories(path.parent_path(), ec);
+        if (ec) {
+            spdlog::error("Error while creating logging directory, {}", ec.message());
+            return nullptr;
+        }
     }
-    return std::ofstream(path);
+    return new std::ofstream(path);
 }
 
 EVP_PKEY* node::register_node(std::string name) {
@@ -230,15 +235,23 @@ void node::send_messages() {
 }
 
 void node::export_node_to_file() {
-    nlohmann::json node;
-    node["name"] = this->name;
-    node["is_faulty"] = this->is_faulty;
-    std::vector<std::string> messages;
-    for (auto it = this->messages.begin(); it != this->messages.end(); ++it) {
-        messages.push_back(it->to_string());
+    if (this->file && this->file->is_open()) {
+        nlohmann::json node;
+        node["name"] = this->name;
+        node["is_faulty"] = this->is_faulty;
+        std::vector<std::string> messages;
+        for (auto it = this->messages.begin(); it != this->messages.end(); ++it) {
+            messages.push_back(it->to_string());
+        }
+        node["messages"] = messages;
+        *this->file << node.dump(4);
+        std::string timestamp = node::get_current_timestamp();
+        std::filesystem::path path = std::filesystem::path(log_directory) / timestamp / this->name;
+        if (!certificate_authority::export_issed_keys(this->name, path)) {
+            spdlog::error("Error exporting private and public keys to a file");
+        }
     }
-    node["messages"] = messages;
-    if (this->file.is_open()) {
-        this->file << node.dump(4);
+    else {
+        spdlog::error("Logging file does not exists or it is corrupted");
     }
 }

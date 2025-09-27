@@ -112,3 +112,17 @@ bool certificate_authority::save_public_key(EVP_PKEY* pkey, const std::string& f
     BIO_free(bio);
     return true;
 }
+
+certificate_authority::~certificate_authority() {
+    for (auto it = certificate_authority::issued_keys.begin(); it != certificate_authority::issued_keys.end(); ++it) {
+        if (it->second != nullptr) {
+            EVP_PKEY_free(it->second);
+            it->second = nullptr;
+        }
+    }
+    certificate_authority::issued_keys.clear();
+
+    if (certificate_authority::libctx) {
+        OSSL_LIB_CTX_free(certificate_authority::libctx);
+    }
+}

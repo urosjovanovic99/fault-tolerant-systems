@@ -23,4 +23,6 @@ public:
 	static EVP_PKEY* generate_keys(std::string node_name);
 	static EVP_PKEY* get_issued_public_key(std::string node_name);
 	static bool export_issed_keys(std::string node_name, std::filesystem::path);
+
+	~certificate_authority();
 };

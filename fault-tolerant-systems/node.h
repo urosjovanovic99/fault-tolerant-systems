@@ -51,4 +51,6 @@ public:
 	void export_node_to_file();
 
 	static std::string get_current_timestamp();
+
+	~node();
 };

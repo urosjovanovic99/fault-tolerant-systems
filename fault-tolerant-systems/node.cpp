@@ -255,3 +255,15 @@ void node::export_node_to_file() {
         spdlog::error("Logging file does not exists or it is corrupted");
     }
 }
+
+node::~node() {
+    if (this->file != nullptr) {
+        this->file->close();
+        this->file = nullptr;
+    }
+
+    if (this->issued_key != nullptr) {
+        EVP_PKEY_free(this->issued_key);
+        this->issued_key = nullptr;
+    }
+}

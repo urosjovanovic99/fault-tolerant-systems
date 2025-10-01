@@ -17,7 +17,6 @@ public:
 	static std::string default_message;
 
 private:
-	std::string generate_random_message();
 	void create_graph();
 	node* pick_starting_node();
 

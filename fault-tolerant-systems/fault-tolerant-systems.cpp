@@ -11,6 +11,8 @@ int main(int argc, char* argv[])
 		return 1;
 	}
 
+	srand(static_cast<unsigned int>(time(0)));
+
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
 
     console_sink->set_color(spdlog::level::trace, 7);   // White

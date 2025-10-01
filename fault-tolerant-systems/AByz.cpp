@@ -7,20 +7,9 @@ AByz::AByz(int N, int m, bool is_source_faulty) {
 	this->N = N;
 	this->m = m;
 	this->is_source_faulty = is_source_faulty;
-	this->message = this->generate_random_message();
+	this->message = chain_message::generate_random_message();
 	this->create_graph();
 	this->source_node = this->pick_starting_node();
-}
-
-std::string AByz::generate_random_message() {
-	std::vector<unsigned char> message;
-	for (int i = 0; i < 10; i++) {
-		int ascii_index = (rand() % 26) + 65;
-		unsigned char letter = static_cast<char>(ascii_index);
-		message.push_back(letter);
-	}
-	std::string random_message(message.begin(), message.end());
-	return random_message;
 }
 
 void AByz::create_graph() {

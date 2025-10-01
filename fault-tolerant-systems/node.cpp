@@ -1,4 +1,5 @@
-﻿#include"node.h"
+﻿#include "node.h"
+#include "AByz.h"
 #include <nlohmann/json.hpp>
 
 const std::string node::log_directory = "logs";
@@ -168,7 +169,7 @@ bool node::verify_message(const std::vector<unsigned char>& message, const std::
         return true;
     }
     else if (rc == 0) {
-        spdlog::debug("Signature invalidl");
+        spdlog::critical("Signature invalid");
         return false;
     }
     else {
@@ -206,6 +207,11 @@ void node::receive_message(chain_message received_message) {
     if (is_verified) {
         this->messages.push_back(received_message);
     }
+    else {
+        // push back default message
+        chain_message default_message(AByz::default_message);
+        this->messages.push_back(default_message);
+    }
 }
 
 // go through all received messages and if message is not signed by this node, sign it and forward it to other nodes
@@ -220,6 +226,12 @@ void node::send_messages() {
             chain_message forwarding_message = *it;
             forwarding_message.signers.push_back(this->name);
             forwarding_message.signatures.push_back(signed_message);
+
+            // if node is faulty, simulate message tweaking
+            if (this->is_faulty && (rand() % 10) < 5) {
+                std::string tweaked_message = chain_message::generate_random_message();
+                forwarding_message.plain_message = std::vector<unsigned char>(tweaked_message.begin(), tweaked_message.end());
+            }
 
             // add signature on old message as well
             it->signers.push_back(this->name);

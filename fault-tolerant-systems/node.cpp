@@ -4,6 +4,11 @@
 
 const std::string node::log_directory = "logs";
 const std::chrono::system_clock::time_point node::now = std::chrono::system_clock::now();
+node* node::source_node = nullptr;
+
+void node::set_source_node(node* source) {
+    node::source_node = source;
+}
 
 std::string node::get_current_timestamp() {
     std::time_t t = std::chrono::system_clock::to_time_t(now);
@@ -250,11 +255,35 @@ void node::send_messages() {
     }
 }
 
+void node::choose_message() {
+    std::string source_message;
+    for (auto it = this->messages.begin(); it != this->messages.end(); ++it) {
+        std::string current_message(it->plain_message.begin(), it->plain_message.end());
+        if (current_message != AByz::default_message && it->signers.front() == node::source_node->name) {
+            if (source_message == current_message || source_message.empty()) {
+                source_message = current_message;
+            }
+            else {
+                this->message = new chain_message(AByz::default_message);
+                return;
+            }
+        }
+    }
+    if (source_message.empty()) {
+        this->message = new chain_message(AByz::default_message);
+    }
+    else {
+        this->message = new chain_message(source_message);
+    }
+    return;
+}
+
 void node::export_node_to_file() {
     if (this->file && this->file->is_open()) {
         nlohmann::json node;
         node["name"] = this->name;
         node["is_faulty"] = this->is_faulty;
+        node["choosen_message"] = std::string(this->message->plain_message.begin(), this->message->plain_message.end());
         std::vector<std::string> messages;
         for (auto it = this->messages.begin(); it != this->messages.end(); ++it) {
             messages.push_back(it->to_string());

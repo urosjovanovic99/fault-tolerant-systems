@@ -12,6 +12,7 @@ AByz::AByz(int N, int m, bool is_source_faulty) {
 	this->message = chain_message::generate_random_message();
 	this->create_graph();
 	this->source_node = this->pick_starting_node();
+	node::set_source_node(this->source_node);
 	this->file = this->create_logging();
 }
 
@@ -47,6 +48,7 @@ void AByz::run_algorithm() {
 	}
 
 	for (auto node = nodes->begin(); node != nodes->end(); ++node) {
+		node->second->choose_message();
 		node->second->export_node_to_file();
 	}
 

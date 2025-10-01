@@ -26,12 +26,14 @@ private:
 	EVP_PKEY* issued_key;
 	bool is_faulty;
 	std::vector<chain_message> messages;
+	chain_message* message;
 	std::unordered_map<std::string, node*>* neighbours;
 	int faulty_nodes;
 	std::ofstream* file;
 
 	static const std::string log_directory;
 	static const std::chrono::system_clock::time_point now;
+	static node* source_node;
 
 private:
 	EVP_PKEY* register_node(std::string name);
@@ -50,7 +52,9 @@ public:
 	void send_messages();
 	void receive_message(chain_message message);
 	void export_node_to_file();
-
+	void choose_message();
+	
+	static void set_source_node(node* source);
 	static std::string get_current_timestamp();
 
 	~node();

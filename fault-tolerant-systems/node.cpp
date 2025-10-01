@@ -191,7 +191,13 @@ bool node::verify_message(const std::vector<unsigned char>& message, const std::
 // if already signed by this node discard it
 void node::receive_message(chain_message received_message) {
     if (std::find(received_message.signers.begin(), received_message.signers.end(), this->name) != received_message.signers.end()) {
+        spdlog::error("This message {} is already signed by node {}", received_message.to_string(), this->name);
         return; // already signed it
+    }
+
+    if (std::string(received_message.plain_message.begin(), received_message.plain_message.end()) == AByz::default_message) {
+        spdlog::error("Do not accept default messages, message: {} node {}", received_message.to_string(), this->name);
+        return; // do not accept default messages
     }
 
     spdlog::info("Node {} received message {} ", this->name, received_message.to_string());
@@ -233,7 +239,7 @@ void node::send_messages() {
     for (auto it = this->messages.begin(); it != this->messages.end(); ++it) {
         if (it->signers.size() < (this->faulty_nodes + 1) &&
             (std::find(it->signers.begin(), it->signers.end(), this->name) == it->signers.end() || it->signers.size() == 0) &&
-            std::string(it->plain_message.begin(), it->plain_message.begin()) != AByz::default_message) {
+            std::string(it->plain_message.begin(), it->plain_message.end()) != AByz::default_message) {
             // if this is first signature sign plain message, otherwise sign other signatures
             std::vector<unsigned char> signed_message = this->sign_message(it->signatures.size() == 0 ? it->plain_message : it->signatures.back());
 

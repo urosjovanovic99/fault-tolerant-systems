@@ -44,6 +44,7 @@ public:
 	node(std::string name, bool is_faulty, std::unordered_map<std::string, node*>* neighbours, int faulty_nodes = 0);
 	bool get_is_node_faulty();
 	void set_is_node_faulty(bool is_faulty);
+	std::string get_node_name();
 	std::vector<chain_message> get_messages();
 	EVP_PKEY* get_public_key();
 	void send_messages();

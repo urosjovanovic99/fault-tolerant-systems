@@ -64,6 +64,10 @@ void node::set_is_node_faulty(bool is_faulty) {
 	this->is_faulty = is_faulty;
 }
 
+std::string node::get_node_name() {
+    return this->name;
+}
+
 std::vector<chain_message> node::get_messages()
 {
 	return this->messages;

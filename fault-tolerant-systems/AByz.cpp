@@ -1,7 +1,9 @@
 #include"AByz.h"
 #include"string.h"
+#include <nlohmann/json.hpp>
 
 std::string AByz::default_message = "DEFAULT MESSAGE";
+const std::string AByz::log_directory = "logs";
 
 AByz::AByz(int N, int m, bool is_source_faulty) {
 	this->N = N;
@@ -10,6 +12,7 @@ AByz::AByz(int N, int m, bool is_source_faulty) {
 	this->message = chain_message::generate_random_message();
 	this->create_graph();
 	this->source_node = this->pick_starting_node();
+	this->file = this->create_logging();
 }
 
 void AByz::create_graph() {
@@ -45,5 +48,46 @@ void AByz::run_algorithm() {
 
 	for (auto node = nodes->begin(); node != nodes->end(); ++node) {
 		node->second->export_node_to_file();
+	}
+
+	this->export_result_to_file();
+}
+
+std::ofstream* AByz::create_logging() {
+	std::string timestamp = node::get_current_timestamp();
+	std::filesystem::path path = std::filesystem::path(log_directory) / timestamp / "AByz" / "AByz.json";
+	std::error_code ec;
+	if (!std::filesystem::exists(path)) {
+		std::filesystem::create_directories(path.parent_path(), ec);
+		if (ec) {
+			spdlog::error("Error while creating logging directory, {}", ec.message());
+			return nullptr;
+		}
+	}
+	return new std::ofstream(path);
+}
+
+void AByz::export_result_to_file() {
+	if (this->file && this->file->is_open()) {
+		nlohmann::json abyz;
+		abyz["N"] = this->N;
+		abyz["m"] = this->m;
+		abyz["is_source_faulty"] = this->is_source_faulty;
+		abyz["source_node"] = this->source_node->get_node_name();
+		abyz["default_message"] = AByz::default_message;
+		abyz["message"] = this->message;
+		nlohmann::json nodes = nlohmann::json::array();
+		for (auto it = this->nodes->begin(); it != this->nodes->end(); ++it) {
+			nodes.push_back({
+				{ "name", it->second->get_node_name() },
+				{ "is_node_faulty", it->second->get_is_node_faulty() }
+			});
+		}
+		abyz["nodes"] = nodes;
+		*this->file << abyz.dump(4);
+		std::string timestamp = node::get_current_timestamp();
+	}
+	else {
+		spdlog::error("Logging file does not exists or it is corrupted");
 	}
 }

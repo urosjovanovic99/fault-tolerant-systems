@@ -91,3 +91,10 @@ void AByz::export_result_to_file() {
 		spdlog::error("Logging file does not exists or it is corrupted");
 	}
 }
+
+AByz::~AByz() {
+	if (this->file && this->file->is_open()) {
+		this->file->close();
+		this->file = nullptr;
+	}
+}

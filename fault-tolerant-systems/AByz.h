@@ -28,4 +28,6 @@ public:
 	AByz(int N, int m, bool is_source_faulty);
 	void run_algorithm();
 	void export_result_to_file();
+
+	~AByz();
 };

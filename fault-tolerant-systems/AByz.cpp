@@ -14,6 +14,10 @@ AByz::AByz(int N, int m, bool is_source_faulty) {
 	this->source_node = this->pick_starting_node();
 	node::set_source_node(this->source_node);
 	this->file = this->create_logging();
+
+	spdlog::info("Generated random message: {}", this->message);
+	spdlog::info("Default message: {}", AByz::default_message);
+	spdlog::info("Source node is: {}", this->source_node->get_node_name());
 }
 
 void AByz::create_graph() {

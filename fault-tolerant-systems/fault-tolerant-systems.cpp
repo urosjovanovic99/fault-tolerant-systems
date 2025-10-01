@@ -31,6 +31,10 @@ int main(int argc, char* argv[])
 	int N = std::atoi(argv[1]);
 	int m = std::atoi(argv[2]);
 	bool is_source_faulty = std::atoi(argv[3]) == 1;
+	spdlog::info("Input argumenst are:");
+	spdlog::info("N (number of nodes): {}", N);
+	spdlog::info("m (number of faulty nodes): {}", m);
+	spdlog::info("Is source node faulty: {}", is_source_faulty);
 	AByz algorithm(N, m, is_source_faulty);
 	algorithm.run_algorithm();
 	return 0;

@@ -6,13 +6,14 @@ const unsigned int certificate_authority::bits = 4096;
 OSSL_LIB_CTX* certificate_authority::libctx = nullptr;
 
 EVP_PKEY* certificate_authority::generate_keys(std::string node_name) {
+    spdlog::info("Node {} generate pair of private and public keys from certificate authority", node_name);
     EVP_PKEY* pkey = NULL;
 
     spdlog::debug("Generating RSA key for node {}, this may take some time...", node_name);
     pkey = EVP_PKEY_Q_keygen(libctx, propq, "RSA", (size_t)bits);
 
     if (pkey == NULL) {
-        spdlog::error("EVP_PKEY_Q_keygen() failed");
+        spdlog::critical("EVP_PKEY_Q_keygen() failed");
         std::cout << "EVP_PKEY_Q_keygen() failed" << std::endl;
     }
 
@@ -34,7 +35,7 @@ EVP_PKEY* certificate_authority::get_issued_public_key(std::string node_name) {
     }
     
     if (keypair == nullptr) {
-        spdlog::error("Node with name {} does not own public key", node_name);
+        spdlog::critical("Node with name {} does not own public key", node_name);
         return nullptr;
     }
 

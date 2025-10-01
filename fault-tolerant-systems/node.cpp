@@ -83,17 +83,17 @@ EVP_PKEY* node::get_public_key() {
 }
 
 std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& message) {
-    spdlog::info("{} node signing message", this->name);
+    spdlog::debug("{} node signing message", this->name);
     std::vector<unsigned char> signature;
 
     EVP_MD_CTX* ctx = EVP_MD_CTX_new();
     if (!ctx) {
-        spdlog::error("EVP_MD_CTX_new() failed while creating context");
+        spdlog::critical("EVP_MD_CTX_new() failed while creating context");
         return signature;
     }
 
     if (!this->issued_key) {
-        spdlog::error("Node {} do not has issued key", this->name);
+        spdlog::critical("Node {} do not has issued key", this->name);
         spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return signature;
@@ -101,7 +101,7 @@ std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& 
 
     // Init signing with SHA-256 and private key
     if (EVP_DigestSignInit(ctx, nullptr, EVP_sha256(), nullptr, this->issued_key) != 1) {
-        spdlog::error("EVP_DigestSignInit() failed");
+        spdlog::critical("EVP_DigestSignInit() failed");
         spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return signature;
@@ -109,7 +109,7 @@ std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& 
 
     // Feed message
     if (EVP_DigestSignUpdate(ctx, message.data(), message.size()) != 1) {
-        spdlog::error("Message hashing failed");
+        spdlog::critical("Message hashing failed");
         spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return signature;
@@ -118,7 +118,7 @@ std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& 
     // First call to get required signature length
     size_t siglen = 0;
     if (EVP_DigestSignFinal(ctx, nullptr, &siglen) != 1) {
-        spdlog::error("Getting buffer size failed");
+        spdlog::critical("Getting buffer size failed");
         spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return signature;
@@ -130,7 +130,7 @@ std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& 
     // Second call: actually get the signature
     if (EVP_DigestSignFinal(ctx, signature.data(), &siglen) != 1) {
         spdlog::critical("Signing message failed");
-        spdlog::info("Free used memory");
+        spdlog::debug("Free used memory");
         EVP_MD_CTX_free(ctx);
         signature.clear();
         return signature;
@@ -141,7 +141,7 @@ std::vector<unsigned char> node::sign_message(const std::vector<unsigned char>& 
 
     EVP_MD_CTX_free(ctx);
 
-    spdlog::info("Node {} successfully signed message", this->name);
+    spdlog::debug("Node {} successfully signed message", this->name);
     return signature;
 }
 
@@ -149,13 +149,13 @@ bool node::verify_message(const std::vector<unsigned char>& message, const std::
 
     EVP_MD_CTX* ctx = EVP_MD_CTX_new();
     if (!ctx) {
-        spdlog::error("EVP_MD_CTX_new() failed while creating context for message verify");
+        spdlog::critical("EVP_MD_CTX_new() failed while creating context for message verify");
         return false;
     }
 
     // Init verify with SHA-256 and public key
     if (EVP_DigestVerifyInit(ctx, nullptr, EVP_sha256(), nullptr, public_key) != 1) {
-        spdlog::error("EVP_DigestVerifyInit() failed while creating context for message verify");
+        spdlog::critical("EVP_DigestVerifyInit() failed while creating context for message verify");
         spdlog::info("Free used memory");
         EVP_MD_CTX_free(ctx);
         return false;
@@ -182,7 +182,7 @@ bool node::verify_message(const std::vector<unsigned char>& message, const std::
         return false;
     }
     else {
-        spdlog::error("Verification error");
+        spdlog::critical("Verification error");
         return false;
     }
 }
@@ -193,6 +193,8 @@ void node::receive_message(chain_message received_message) {
     if (std::find(received_message.signers.begin(), received_message.signers.end(), this->name) != received_message.signers.end()) {
         return; // already signed it
     }
+
+    spdlog::info("Node {} received message {} ", this->name, received_message.to_string());
 
     std::deque<std::string> signers(received_message.signers);
     std::deque<std::vector<unsigned char>> signatures(received_message.signatures);
@@ -207,6 +209,7 @@ void node::receive_message(chain_message received_message) {
         bool is_signature_valid = this->verify_message(message, signature, public_key);
         if (!is_signature_valid) {
             is_verified = false;
+            spdlog::error("Node {} probably tweaked the message", signer);
             break;
         }
         signers.pop_back();
@@ -214,10 +217,13 @@ void node::receive_message(chain_message received_message) {
     }
 
     if (is_verified) {
+        spdlog::info("Node " + this->name + " successfully verified received message " + received_message.to_string() + 
+            (received_message.signers.size() > 0 ? " from the node " + received_message.signers.back() : "."));
         this->messages.push_back(received_message);
     }
     else {
         // push back default message
+        spdlog::error("Node {} couldn't verify received message came from {}, so use default message instead", this->name, received_message.to_string());
         chain_message default_message(AByz::default_message);
         this->messages.push_back(default_message);
     }
@@ -248,6 +254,7 @@ void node::send_messages() {
 
             for (auto node = this->neighbours->begin(); node != this->neighbours->end(); ++node) {
                 if (std::find(forwarding_message.signers.begin(), forwarding_message.signers.end(), node->first) == forwarding_message.signers.end()) {
+                    spdlog::info("Node {} sends message {} to the node {}", this->name, forwarding_message.to_string(), node->second->get_node_name());
                     node->second->receive_message(forwarding_message);
                 }
             }

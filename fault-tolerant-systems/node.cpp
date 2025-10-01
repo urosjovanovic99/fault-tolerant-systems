@@ -209,7 +209,6 @@ void node::receive_message(chain_message received_message) {
         bool is_signature_valid = this->verify_message(message, signature, public_key);
         if (!is_signature_valid) {
             is_verified = false;
-            spdlog::error("Node {} probably tweaked the message", signer);
             break;
         }
         signers.pop_back();
@@ -233,7 +232,8 @@ void node::receive_message(chain_message received_message) {
 void node::send_messages() {
     for (auto it = this->messages.begin(); it != this->messages.end(); ++it) {
         if (it->signers.size() < (this->faulty_nodes + 1) &&
-            (std::find(it->signers.begin(), it->signers.end(), this->name) == it->signers.end() || it->signers.size() == 0)) {
+            (std::find(it->signers.begin(), it->signers.end(), this->name) == it->signers.end() || it->signers.size() == 0) &&
+            std::string(it->plain_message.begin(), it->plain_message.begin()) != AByz::default_message) {
             // if this is first signature sign plain message, otherwise sign other signatures
             std::vector<unsigned char> signed_message = this->sign_message(it->signatures.size() == 0 ? it->plain_message : it->signatures.back());
 

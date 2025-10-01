@@ -249,7 +249,7 @@ void node::send_messages() {
             forwarding_message.signatures.push_back(signed_message);
 
             // if node is faulty, simulate message tweaking
-            if (this->is_faulty && (rand() % 10) < 5) {
+            if (this->is_faulty && (rand() % 10) < 5 && this != node::source_node) {
                 std::string tweaked_message = chain_message::generate_random_message();
                 forwarding_message.plain_message = std::vector<unsigned char>(tweaked_message.begin(), tweaked_message.end());
             }
@@ -260,6 +260,15 @@ void node::send_messages() {
 
             for (auto node = this->neighbours->begin(); node != this->neighbours->end(); ++node) {
                 if (std::find(forwarding_message.signers.begin(), forwarding_message.signers.end(), node->first) == forwarding_message.signers.end()) {
+                    // simulate if source node is faulty
+                    if (this->is_faulty && this == node::source_node && (rand() % 10) < 5) {
+                        std::string tweaked_message = chain_message::generate_random_message();
+                        forwarding_message.plain_message = std::vector<unsigned char>(tweaked_message.begin(), tweaked_message.end());
+                        forwarding_message.signatures.clear();
+                        forwarding_message.signatures.push_back(this->sign_message(forwarding_message.plain_message));
+                        forwarding_message.signers.clear();
+                        forwarding_message.signers.push_back(this->name);
+                    }
                     spdlog::info("Node {} sends message {} to the node {}", this->name, forwarding_message.to_string(), node->second->get_node_name());
                     node->second->receive_message(forwarding_message);
                 }
